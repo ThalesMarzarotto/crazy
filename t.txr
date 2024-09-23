@@ -1,0 +1,38 @@
+Tokens - An idea to optimize the rendering of the whole text as fast as possible 
+    - Normal Token = at leas a non-blank chr followed by a blank space or controller chr 
+    - blank Toke = at least a blank space followed by a character or controller chr 
+
+the return chr counts as a controller 
+
+case 0:
+    whatever\par 
+    _\cho\f1\f236
+
+case 1:
+    whatever\par 
+    b\par
+
+case 2:
+    whatever\par 
+    ____\par
+
+case 3:
+    whatever\par 
+    _e\par
+
+case 4:
+    whatever\par 
+    e_\par
+
+
+
+
+
+
+Strategies to improve the text rendering 
+- Tokens
+- WebWorker (concurrency) - take advantage of the computer cores
+- Cache the layout for faster performance 
+
+
+
