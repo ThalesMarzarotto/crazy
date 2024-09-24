@@ -314,7 +314,18 @@ export default class Editor {
                  }
  
                  
-            
+
+                 if(tEnd === false &&  tStr === false && newLine === true)  {
+                    if(newLine) {
+                        x =10
+                        y+= maxHeight+2;
+                        newLine = false
+                    }
+                    
+
+                 }
+
+           
                 
                 // console.log(chr.charCodeAt(0), chr);
                     // we are going to start the process of rendering some thing
@@ -322,10 +333,10 @@ export default class Editor {
 
                         // console.log(tIStr, tIEnd);
                         
-                        tStr = true
+                        tStr = false
                         tEnd = false
                         let renderText = text.substring(tIStr, tIEnd)
-                        console.log(renderText);
+                    
                         
                         // console.log(this.ctx.measureText(renderText),renderText);
                          let metrics = this.ctx.measureText(renderText)
@@ -339,11 +350,85 @@ export default class Editor {
                        
                           if ((Math.ceil(metrics.width)+x)>=(pageWidth -20)){
                          
-                            let tpIEnd =  (tIEnd -tIStr)/2 
                             
+                            console.log("insid");
                             
-                            // 
+                          
+            
+                            // while (true) {
+                            // "A Width binary search"
 
+                           // }
+                            let anc =0
+                            let lo = 0
+                            let hi = renderText.length-1
+                            let batch = []
+                            let mI =  Math.floor((hi-lo)/2 ) 
+                            let tmpStr = renderText.substring(0, mI)
+
+
+                            let lastChr = renderText.substring(mI, mI+1)
+                            console.log(lastChr, mI);
+                            
+                     
+                            // pageWidth??
+                            while (true) {
+                                // interval analysis
+                                let measure = this.ctx.measureText(tmpStr);
+                                let mLsChr = this.ctx.measureText(lastChr);
+                               
+                                
+                                if((measure.width+x)>pageWidth ) {
+                                    hi = mI 
+                                } else if( (pageWidth-(measure.width+x) >0) && (pageWidth-(measure.width+x+mLsChr.width) <0 )) // can be the case that its never going to
+                                  {
+                                   //done ?
+                                   console.log(tmpStr,mI);
+                                   console.log("done");
+                                   
+                                   batch.push(tmpStr)
+                                   console.log(batch);
+                                   
+                                   anc = mI +1                                    
+                                   lo = mI +1
+                                   hi = renderText.length-1
+                                   console.log(anc, lo, hi);
+
+                                
+                                } else if (mI === renderText.length-1) {
+                                    console.log(tmpStr,mI);
+                                    console.log("done");
+                                    
+                                    batch.push(tmpStr)
+                                    console.log(batch);
+                                    
+                                    anc = mI +1                                    
+                                    lo = mI +1
+                                    hi = renderText.length-1
+                                    console.log(anc, lo, hi);
+                                    break
+
+                                }
+                                else {
+                                     lo = mI
+                                }
+
+                                
+                                mI = Math.floor((hi-lo)/2 ) 
+                                console.log(mI, hi,lo);
+                                
+                                tmpStr = renderText.substring(anc, mI)
+                                lastChr = renderText.substring(mI,mI+1)
+                                
+                                console.log(tmpStr, "lastChr: "+ lastChr );
+                                
+                                
+                                // console.log(tmpStr,mI);
+                                
+
+                            }
+
+                            
 
                             // this.lines[lineCount][3]= i
                                                        
@@ -371,7 +456,11 @@ export default class Editor {
                             // i+=1
                             //  chr =text[i];
                             //  metrics = this.ctx.measureText(chr) 
-                        } 
+                        }  else {
+
+
+
+                        }
                        
                         if (y<this.window.innerHeight){
                          this.lines[lineCount][9].push({x:(x+metrics.width)/2,y:y,i:i})
@@ -419,18 +508,18 @@ export default class Editor {
         
         
                       
-                                
-                 if(newLine) {
-                    x =10
-                    y+= maxHeight+2;
-                    newLine = false
-                }
-                
+                 
                        
                        
                         x+= Math.ceil(metrics.width)
 
-
+                        if(newLine) {
+                            x =10
+                            y+= maxHeight+2;
+                            newLine = false
+                        }
+                        
+                                
                         
                         // part of the code responsible for rendering 
 
