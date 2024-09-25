@@ -351,8 +351,7 @@ export default class Editor {
                           if ((Math.ceil(metrics.width)+x)>=(pageWidth -20)){
                          
                             
-                            console.log("insid");
-                            
+                        
                           
             
                             // while (true) {
@@ -363,24 +362,28 @@ export default class Editor {
                             let lo = 0
                             let hi = renderText.length-1
                             let batch = []
-                            let mI =  Math.floor((hi-lo)/2 ) 
-                            let tmpStr = renderText.substring(0, mI)
+                            let mI =  Math.floor((hi+lo)/2 ) 
+                            let tmpStr = renderText.substring(0, mI-1)
 
 
                             let lastChr = renderText.substring(mI, mI+1)
                             console.log(lastChr, mI);
                             
                      
-                            // pageWidth??
+                            // // pageWidth??
                             while (true) {
                                 // interval analysis
-                                let measure = this.ctx.measureText(tmpStr);
-                                let mLsChr = this.ctx.measureText(lastChr);
+                             
+                                mI = Math.floor((hi+lo)/2 ) 
                                
                                 
-                                if((measure.width+x)>pageWidth ) {
-                                    hi = mI 
-                                } else if( (pageWidth-(measure.width+x) >0) && (pageWidth-(measure.width+x+mLsChr.width) <0 )) // can be the case that its never going to
+                                tmpStr = renderText.substring(anc, mI)
+                                lastChr = renderText.substring(mI,mI+1)
+                                   let measure = this.ctx.measureText(tmpStr);
+                                let mLsChr = this.ctx.measureText(lastChr);
+                                                                                            
+
+                                if( (pageWidth-(measure.width+x) >0) && (pageWidth-(measure.width+x+mLsChr.width) <0 )) // can be the case that its never going to
                                   {
                                    //done ?
                                    console.log(tmpStr,mI);
@@ -393,42 +396,61 @@ export default class Editor {
                                    lo = mI +1
                                    hi = renderText.length-1
                                    console.log(anc, lo, hi);
+                                   
+                                    let remainText=  renderText.substring(anc, renderText.length-1)
+                                    let remainWidth = this.ctx.measureText(remainText)
 
-                                
-                                } else if (mI === renderText.length-1) {
-                                    console.log(tmpStr,mI);
-                                    console.log("done");
-                                    
-                                    batch.push(tmpStr)
-                                    console.log(batch);
-                                    
-                                    anc = mI +1                                    
-                                    lo = mI +1
-                                    hi = renderText.length-1
-                                    console.log(anc, lo, hi);
+                                   if (remainWidth.width<pageWidth) {        
+                                    batch.push(remainText)                                 
                                     break
 
+                                    }
+
+
+
+                                
                                 }
+                                
+                                if((measure.width+x)>pageWidth ) {
+                                    hi = mI 
+                                }  
                                 else {
                                      lo = mI
                                 }
 
                                 
-                                mI = Math.floor((hi-lo)/2 ) 
-                                console.log(mI, hi,lo);
-                                
-                                tmpStr = renderText.substring(anc, mI)
-                                lastChr = renderText.substring(mI,mI+1)
-                                
-                                console.log(tmpStr, "lastChr: "+ lastChr );
-                                
-                                
-                                // console.log(tmpStr,mI);
-                                
+                           
+                   
 
                             }
 
                             
+
+
+
+                            console.log(x, "beforeX");
+                            
+                            if (batch.length>0) {
+
+                                                
+                                
+
+
+                                batch.forEach((itm)=>{  
+                                    console.log(itm, "'itm");
+                                    let msr = this.ctx.measureText(itm)
+                                    if ((msr.width + x)> pageWidth){ 
+                                        y += (maxHeight+2)
+                                        x=10
+                                    }                                
+                                  this.ctx.fillText(itm, x,y)
+                                  x+=msr.width
+
+                                })
+
+                            }
+
+                            console.log(x, "afterX");
 
                             // this.lines[lineCount][3]= i
                                                        
